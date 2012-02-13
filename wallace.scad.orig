@@ -53,8 +53,13 @@ da8 = 1 / cos(180 / 8) / 2;
 	}
 translate([40, rod_size + bearing_size / 2 + 1 - rod_size / 2 + 2, 60]) {
 		rotate([90, 0, 90]) x_carriage();
+<<<<<<< HEAD
+		translate([x_carriage_width / 2 + carriage_extruder_offset, -14 - bearing_size / 2 - 4, x_rod_spacing / 2 /+ bearing_size / 2 + 4]) {
+			rotate([90, 0, 180]) translate([10.57, 30.3, -14]) import_stl("gregs/gregs_accessible_wade-wildseyed_mount.stl", convexity = 5);
+=======
 		translate([x_carriage_width / 2 + carriage_extruder_offset, -14 - bearing_size / 2 - 4, x_rod_spacing / 2 + bearing_size / 2 + 4]) {
 			rotate([90, 0, 180]) translate([10.57, 30.3, -14]) import("gregs/gregs_accessible_wade-wildseyed_mount.stl", convexity = 5);
+>>>>>>> whosawhatsis/master
 			%rotate(180 / 8) cylinder(r = 2, h = 150, center = true, $fn = 8);
 		}
 	}
@@ -66,10 +71,13 @@ translate([40, rod_size + bearing_size / 2 + 1 - rod_size / 2 + 2, 60]) {
 	for(side = [0, 1]) mirror([0, side, 0]) translate([0, -motor_casing / 2 - rod_size * 2 - 10, -bearing_size - end_height + rod_size * 1.5]) rotate([90, 0, 0]) foot();
 	translate([-yz_motor_distance / 2 + rod_size, 0, 210 - end_height]) rotate([180, 0, 90]) z_top_clamp(0);
 
+<<<<<<< HEAD
+=======
 
 
 
 
+>>>>>>> whosawhatsis/master
 
 module z_top_clamp() difference() {
 	union() {
@@ -316,8 +324,13 @@ module x_end(motor = 0) mirror([(motor == 0) ? 1 : 0, 0, 0]) difference() {
 		}
 		// holes for clamping screws
 		rotate([90, 0, 0]) {
+<<<<<<< HEAD
+			cylinder(r = 3 * 7/12, h = 100, center = true, $fn = 6);
+			translate([0, 0, bearing_size / 4 + 0.5]) cylinder(r = 3 * 7/6, h = 100, center = false, $fn = 6);
+=======
 			cylinder(r = m3_size * da6, h = 100, center = true, $fn = 6);
 			translate([0, 0, bearing_size / 4 + .5]) cylinder(r = m3_nut_size * da6, h = 100, center = false, $fn = 6);
+>>>>>>> whosawhatsis/master
 		}
 	}
 	translate([-(motor_casing / 4 + rod_size / 2), 0, 5]) rotate(90) cylinder(r = rod_nut_size / 2, h = x_rod_spacing + 8 + rod_size, $fn = 6);
@@ -354,9 +367,16 @@ module y_bearing_retainer() difference() {
 			translate([-yz_motor_distance / 2 + bearing_size / 2, 0, 0]) circle(bearing_size / 2);
 			translate([-yz_motor_distance / 2 + bearing_size / 2 - bearing_size / 2, 0, 0]) square(bearing_size);
 		}
+<<<<<<< HEAD
 		for(rh=[1,0]) for(side = [1, -1]) translate([side * (yz_motor_distance + motor_casing - motor_screw_spacing) / 2,0, rh*motor_screw_spacing + 5]) rotate(90) rotate([90, 0, 90]) {
 			cylinder(r = 3 * 7/12, h = bearing_size, center = true, $fn = 6);
 			translate([0, 0, bearing_size * sqrt(2) / 4 - 5]) rotate([180, 0, 0]) cylinder(r = 3, h = bearing_size, $fn = 30);
+=======
+		//screw holes
+		for(side = [1, -1]) translate([side * (yz_motor_distance + motor_casing - motor_screw_spacing) / 2, 0, 5]) rotate(90) rotate([90, 0, 90]) {
+			cylinder(r = m3_size * da6, h = bearing_size, center = true, $fn = 6);
+			translate([0, 0, bearing_size * sqrt(2) / 4 - 5]) rotate([180, 0, 0]) cylinder(r = m3_size, h = bearing_size, $fn = 30);
+>>>>>>> whosawhatsis/master
 		}
 	}
 	for(sides=[1,0]) translate([0, 0,sides* (motor_screw_spacing) + 5]) rotate(90) rotate([90, 0, 90]) cylinder(r = (yz_motor_distance + motor_casing - motor_screw_spacing + 10) / 2, h = bearing_size + 10, center = true, $fn = 6);
@@ -406,8 +426,13 @@ module base_end(single=true) difference() {
 	translate([0, 0, end_height]) scale([1, 1, 0.5]) rotate([90, 0, 90]) cylinder(r = motor_casing / 2, h = yz_motor_distance + 20, center = true);
 	translate([yz_motor_distance / 2 - rod_size, 0, 0]) {
 		translate([0, 0, -3]) linear_extrude(height = end_height - motor_casing / 4, convexity = 5) {
+<<<<<<< HEAD
+			rotate(180 / 8) circle(rod_size * 13/24, $fn = 8);
+			translate([0, -rod_size / 4, 0]) square([rod_size * 0.6, rod_size / 2]);
+=======
 			rotate(180 / 8) circle(rod_size * da8, $fn = 8);
 			translate([0, -rod_size / 4, 0]) square([rod_size * .6, rod_size / 2]);
+>>>>>>> whosawhatsis/master
 		}
 		// z axis clamping
 		for(h = [8, end_height - motor_casing / 4 - 8]) translate([0, 0, h]) rotate([90, 0, 90]) {
@@ -417,13 +442,37 @@ module base_end(single=true) difference() {
 			translate([0, 0, -rod_size / 2 - 8]) rotate([0, 180, 0]) cylinder(r = m3_size * da6 * 2, h = yz_motor_distance + motor_casing, $fn = 6);
 		}
 	}
+<<<<<<< HEAD
+	if(single==false){
+		#translate([-yz_motor_distance / 2 + bearing_size / 2, 0, -bearing_size * sqrt(2) / 4]) rotate([90, -45, 0]) {
+			%cylinder(r = rod_size * 13/24, h = 100, center = true, $fn = 8);
+			for(side = [0, 1]) mirror([0, 0, side]) translate([0, 0, rod_size / 2 + 7]) {
+				cylinder(r = bearing_size / 2, h = bearing_length, center = false, $fn = 80);
+				cube([bearing_size / 2, bearing_size / 2, bearing_length]);
+			}
+=======
 	translate([-yz_motor_distance / 2 + bearing_size / 2, 0, -bearing_size * sqrt(2) / 4]) rotate([90, -45, 0]) {
 		%cylinder(r = rod_size * da8, h = 100, center = true, $fn = 8);
 		for(side = [0, 1]) mirror([0, 0, side]) translate([0, 0, rod_size / 2 + 2]) {
 			cylinder(r = bearing_size / 2, h = bearing_length, center = false, $fn = 80);
 			cube([bearing_size / 2, bearing_size / 2, bearing_length]);
+>>>>>>> whosawhatsis/master
 		}
+	}else{
 	}
+<<<<<<< HEAD
+		#translate([-yz_motor_distance / 2 + bearing_size / 2, 0, -bearing_size * sqrt(2) / 4]) rotate([90, -45, 0]) {
+			%cylinder(r = rod_size * 13/24, h = 100, center = true, $fn = 8);
+			translate([0, 0, -bearing_length/2]) {
+				cylinder(r = bearing_size / 2, h = bearing_length, center = false, $fn = 80);
+				cube([bearing_size / 2, bearing_size / 2, bearing_length]);
+			}
+		}
+	translate([0, 0, end_height - rod_size * 1.5]) rotate([90, 180 / 8, 0]) cylinder(r = rod_size * 13/24, h = motor_casing + rod_size * 5, $fn = 8, center = true);
+	%translate([0, 0, end_height - rod_size * 1.5]) rotate([90, 180 / 8, 0]) cylinder(r = rod_size * 13/24, h = 100, $fn = 8, center = true);
+}
+=======
 	translate([0, 0, end_height - rod_size * 1.5]) rotate([90, 180 / 8, 0]) cylinder(r = rod_size * da8, h = motor_casing + rod_size * 5, $fn = 8, center = true);
 	%translate([0, 0, end_height - rod_size * 1.5]) rotate([90, 180 / 8, 0]) cylinder(r = rod_size * da8, h = 100, $fn = 8, center = true);
 }
+>>>>>>> whosawhatsis/master
