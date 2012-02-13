@@ -388,7 +388,7 @@ module y_bearing_retainer_slim() intersection() {
 	translate([0, 0,5]) rotate(90) rotate([90, 0, 90]) cylinder(r = (yz_motor_distance + motor_casing - motor_screw_spacing + 10) / 2, h = bearing_size + 10, center = true, $fn = 6);
 }
 
-module base_end(single=true) difference() {
+module base_end(single=false) difference() {
 	linear_extrude(height = end_height, convexity = 5) difference() {
 		square([yz_motor_distance + motor_casing - motor_screw_spacing + 10, motor_casing + rod_size * 4], center = true);
 		for(end = [1, -1]) {
@@ -417,11 +417,21 @@ module base_end(single=true) difference() {
 			translate([0, 0, -rod_size / 2 - 8]) rotate([0, 180, 0]) cylinder(r = m3_size * da6 * 2, h = yz_motor_distance + motor_casing, $fn = 6);
 		}
 	}
-	translate([-yz_motor_distance / 2 + bearing_size / 2, 0, -bearing_size * sqrt(2) / 4]) rotate([90, -45, 0]) {
-		%cylinder(r = rod_size * da8, h = 100, center = true, $fn = 8);
-		for(side = [0, 1]) mirror([0, 0, side]) translate([0, 0, rod_size / 2 + 2]) {
-			cylinder(r = bearing_size / 2, h = bearing_length, center = false, $fn = 80);
-			cube([bearing_size / 2, bearing_size / 2, bearing_length]);
+if(single==false){
+		#translate([-yz_motor_distance / 2 + bearing_size / 2, 0, -bearing_size * sqrt(2) / 4]) rotate([90, -45, 0]) {
+			%cylinder(r = rod_size * 13/24, h = 100, center = true, $fn = 8);
+			for(side = [0, 1]) mirror([0, 0, side]) translate([0, 0, rod_size / 2 + 7]) {
+				cylinder(r = bearing_size / 2, h = bearing_length, center = false, $fn = 80);
+				cube([bearing_size / 2, bearing_size / 2, bearing_length]);
+			}
+ 		}
+	}else{
+		#translate([-yz_motor_distance / 2 + bearing_size / 2, 0, -bearing_size * sqrt(2) / 4]) rotate([90, -45, 0]) {
+			%cylinder(r = rod_size * 13/24, h = 100, center = true, $fn = 8);
+			translate([0, 0, -bearing_length/2]) {
+				cylinder(r = bearing_size / 2, h = bearing_length, center = false, $fn = 80);
+				cube([bearing_size / 2, bearing_size / 2, bearing_length]);
+			}
 		}
 	}
 	translate([0, 0, end_height - rod_size * 1.5]) rotate([90, 180 / 8, 0]) cylinder(r = rod_size * da8, h = motor_casing + rod_size * 5, $fn = 8, center = true);
