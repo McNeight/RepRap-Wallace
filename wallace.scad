@@ -25,8 +25,8 @@ da8 = 1 / cos(180 / 8) / 2;
 
 //Comment out all of the lines in the following section to render the assembled machine. Uncomment one of them to export that part for printing. You can also use the individual files to export each part.
 
-//!base_end();
-//!for(b = [0:1]) mirror([0, b, 0]) for(a = [-1,1]) translate([a * bearing_size / 4, bearing_size //- (bearing_size * 2/3) * a, 0]) rotate(90 + 90 * a) y_bearing_retainer();
+!base_end();
+//!for(b = [0:1]) mirror([0, b, 0]) for(a = [-1,1]) translate([a * bearing_size / 4, bearing_size - (bearing_size * 2/3) * a, 0]) rotate(90 + 90 * a) y_bearing_retainer();
 //!for(b = [0:1]) mirror([0, b, 0]) for(a = [-1,1]) translate([a * -7.5, 18 - 5 * a, 0]) rotate(180 + 90 * a) bed_mount();
 //!x_end(2);
 //!x_end(0);
@@ -49,7 +49,7 @@ da8 = 1 / cos(180 / 8) / 2;
 	translate([-yz_motor_distance / 2 + rod_size - motor_casing / 4 - rod_size / 2, 0, 60 + (x_rod_spacing + 8 + rod_size) / 2]) rotate([0, 180, 0]) x_end(0);
 	translate([140, 0, 60 + (x_rod_spacing + 8 + rod_size) / 2]) rotate([0, 180, 0]) {
 		x_end(2);
-		translate([0, 8 + rod_size, 0]) rotate([90, 0, 0]) translate([0, (x_rod_spacing + 8 + rod_size) / 2, rod_siz/e / 2 - 2 - bearing_size / 2 - 4 - idler_pulley_width - 1.5]) idler_pulley(true);
+		translate([0, 8 + rod_size, 0]) rotate([90, 0, 0]) translate([0, (x_rod_spacing + 8 + rod_size) / 2, rod_size / 2 - 2 - bearing_size / 2 - 4 - idler_pulley_width - 1.5]) idler_pulley(true);
 	}
 translate([40, rod_size + bearing_size / 2 + 1 - rod_size / 2 + 2, 60]) {
 		rotate([90, 0, 90]) x_carriage();
