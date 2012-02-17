@@ -24,18 +24,43 @@ da6 = 0.5;//1 / cos(180 / 6) / 2;
 da8 = 0.5412;//1 / cos(180 / 8) / 2;
 
 //Comment out all of the lines in the following section to render the assembled machine. Uncomment one of them to export that part for printing. You can also use the individual files to export each part.
-comp=1;
+
+comp=99;
+
+//base_ends
 if(comp==1)!base_end(single=0);
-if(comp==2)!for(b = [0:1]) mirror([0, b, 0]) for(a = [-1,1]) translate([a * bearing_size / 4, bearing_size - (bearing_size * 2/3) * a, 0]) rotate(90 + 90 * a) y_bearing_retainer();
-if(comp==3)!for(b = [0:1]) mirror([0, b, 0]) for(a = [-1,1]) translate([a * bearing_size / 4, bearing_size - (bearing_size * 2/3) * a, 0]) rotate(90 + 90 * a) y_bearing_retainer_slim();
+
+//y_bearing_retainer
+if(comp==2)!for(b = [0:1]) mirror([0, b, 0]) for(a = [1]) translate([a * bearing_size / 4, bearing_size - (bearing_size * 2/3) * a, 0]) rotate(90 + 90 * a) y_bearing_retainer();
+
+// y_bearing_retainer_slim
+if(comp==3)!for(a = [-1,1]) translate([a * bearing_size / 4, bearing_size - (bearing_size * 2/3) * a, 5]) rotate(90 + 90 * a) y_bearing_retainer_slim();
+
+//bed_mount
 if(comp==4)!for(b = [0:1]) mirror([0, b, 0]) for(a = [-1,1]) translate([a * -7.5, 18 - 5 * a, 0]) rotate(180 + 90 * a) bed_mount();
+
+//x_end
 if(comp==5)!x_end(2);
+
+//x_end
 if(comp==6)!x_end(0);
+
+//x_carriage
 if(comp==7)!x_carriage();
+
+//leadscrew_coupler
 if(comp==8)!for(side = [-1,1]) translate([0, side * motor_screw_spacing / 2, 0]) leadscrew_coupler();
+
+//y_idler
 if(comp==9)!y_idler();
+
+//idler_pulley
 if(comp==10)!for(x = [1, -1]) for(y = [1, -1]) translate([x * (pulley_size / 2 + 3), y * (pulley_size / 2 + 3), 0]) idler_pulley(true);
+
+//foot
 if(comp==11)!for(x = [1, -1]) for(y = [1, -1]) translate([x * (rod_size * 1.5 + 2), y * (rod_size * 1.5 + 2), 0]) foot();
+
+//z_top_clamp
 if(comp==12)!for(side = [0, 1]) mirror([side, 0, 0]) translate([-rod_size * 2.5, 0, 0]) z_top_clamp();
 
 
@@ -49,7 +74,7 @@ if(comp==99){
 	translate([200, ( motor_screw_spacing / 2 + 5), -bearing_size + bearing_size * sqrt(2) / 4]) mirror([0,1,0]) rotate([-90, 0, 0]) y_bearing_retainer_slim();
 	for(side = [0, 1]) mirror([0, side, 0]) translate([yz_motor_distance / 2 - bearing_size / 2, -motor_casing / 2 - rod_size * 2 - 10, -bearing_size + bearing_size * sqrt(2) / 4]) rotate([90, 0, 0]) bed_mount();
 	translate([-yz_motor_distance / 2 + rod_size - motor_casing / 4 - rod_size / 2, 0, 60 + (x_rod_spacing + 8 + rod_size) / 2]) rotate([0, 180, 0]) x_end(0);
-	translate([140, 0, 60 + (x_rod_spacing + 8 + rod_size) / 2]) rotate([0, 180, 0]) {
+	translate([219, 0, 60 + (x_rod_spacing + 8 + rod_size) / 2]) rotate([0, 180, 0]) {
 		x_end(2);
 		translate([0, 8 + rod_size, 0]) rotate([90, 0, 0]) translate([0, (x_rod_spacing + 8 + rod_size) / 2, rod_size / 2 - 2 - bearing_size / 2 - 4 - idler_pulley_width - 1.5]) idler_pulley(true);
 	}
@@ -360,9 +385,9 @@ module y_bearing_retainer() difference() {
 	}
 	for(sides=[1,0]) translate([0, 0,sides* (motor_screw_spacing) + 5]) rotate(90) rotate([90, 0, 90]) cylinder(r = (yz_motor_distance + motor_casing - motor_screw_spacing + 10) / 2, h = bearing_size + 10, center = true, $fn = 6);
 }
-	for(ii=[1,0]) translate([-3,5,ii*(motor_screw_spacing+18*2-5)-10]) rotate([90]) cylinder(h=20,r=18);
-	translate([6,5,motor_screw_spacing/2+5]) rotate([90]) cylinder(h=20,r=6);
-	#translate([20,-5,motor_screw_spacing/2-1]) rotate(90) cube([15,15,12]);
+	translate([6,5,motor_screw_spacing/2+5]) rotate([90]) cylinder(h=20,r=4);
+	rotate([30, 0, 0])  translate([-(bearing_size + 10) / 2 - bearing_size / 2, -10.5, 0]) cube([bearing_size + 10, 10, motor_screw_spacing / 2 + 7]);
+	translate([0, 0, motor_screw_spacing + 10]) mirror([0, 0, 1]) rotate([30, 0, 0])  translate([-(bearing_size + 10) / 2 - bearing_size / 2, -10.5, 0]) cube([bearing_size + 10, 10, motor_screw_spacing / 2 + 7]);
 }
 
 module y_bearing_retainer_slim() intersection() {
@@ -408,7 +433,7 @@ module base_end(single=0) difference() {
 	//Z smooth rod bore
 	translate([yz_motor_distance / 2 - rod_size, 0, 0]) {
 		translate([0, 0, -3]) {
-			#linear_extrude(height = end_height - motor_casing / 2, convexity = 5) rotate(180 / 8) circle(rod_size * da8, $fn = 8);
+			linear_extrude(height = end_height - motor_casing / 2, convexity = 5) rotate(180 / 8) circle(rod_size * da8, $fn = 8);
 			//translate([0, -rod_size / 4, 0]) square([rod_size * .6, rod_size / 2]);
 		}
 		translate([0,0,10]) difference() {
