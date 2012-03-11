@@ -396,7 +396,7 @@ union() {
 	        cylinder(r=10.3/2,h=24);
             rotate([0,0,beta-90]) translate([0,4,2.5]) {
                 cube([10.3,8,4],center=true);
-                rotate([-90,0,0]) polyhole(r=3.3/2,h=20);
+                //rotate([-90,0,0]) polyhole(r=3.3/2,h=20);
             }         
         }
 	    
