@@ -3,5 +3,3 @@
 *.gcode
 extruder.scad
 *.~
-sf-gcode/*
-slic3r-gcode/*
