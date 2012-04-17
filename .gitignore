@@ -2,3 +2,4 @@
 *.stl
 *.gcode
 extruder.scad
+*.~
