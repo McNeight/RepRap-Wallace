@@ -1,11 +1,15 @@
-rod_size = 6;
-rod_nut_size = 12; //12 for M6, 15 for M8
-bearing_size = 12.5; //12.5 for LM6UU, 15.5 for LM8UU,LM8SUU
-bearing_length = 19.5; //19.5 for LM6UU, 17.5 for LM8SUU, 24.5 for LM8UU
+include <configuration.scad>;
+
+fudgeSize = 1.05;
+
+rod_size = threaded_rod_diameter * fudgeSize;
+rod_nut_size = m8_nut_diameter * fudgeSize; //12 for M6, 15 for M8
+bearing_size = 15.5 * fudgeSize; //12.5 for LM6UU, 15.5 for LM8UU,LM8SUU
+bearing_length = 24.5; //19.5 for LM6UU, 17.5 for LM8SUU, 24.5 for LM8UU
 yz_motor_distance = 25;
-motor_screw_spacing = 26; //26 for NEMA14, 31 for NEMA17
-motor_casing = 38; //38 for NEMA14, 45 for NEMA17
-end_height = 40; //measure the height of your motor casing and add 4mm. Suggestion: 40 for NEMA14, 55 for NEMA17
+motor_screw_spacing = 31; //26 for NEMA14, 31 for NEMA17
+motor_casing = 45; //38 for NEMA14, 45 for NEMA17
+end_height = 55; //measure the height of your motor casing and add 4mm. Suggestion: 40 for NEMA14, 55 for NEMA17
 bed_mount_height = 16;
 //x_rod_spacing = motor_screw_spacing + 3 + rod_size;
 x_rod_spacing = 30;
@@ -15,11 +19,11 @@ pulley_size = 20;
 idler_pulley_width = 10;
 idler_bearing_size = 10;
 gusset_size = 15;
-m3_size = 3;
-m3_nut_size = 6;
-m4_size = 4;
+m3_size = 3*fudgeSize;
+m3_nut_size = 6*fudgeSize;
+m4_size = 4*fudgeSize;
 motor_shaft_size = 5;
-build_volume = [200, 200, 95];
+build_volume = [332.9, 402.2, 298.3];
 printbed_screw_spacing = [209, 209];
 
 
@@ -69,10 +73,32 @@ da12 = 1 / cos(180 / 12) / 2;
 //!for(x = [1, -1]) for(y = [1, -1]) translate([x * (pulley_size / 2 + 3), y * (pulley_size / 2 + 3), 0]) idler_pulley(true);
 //!for(x = [1, -1]) for(y = [1, -1]) translate([x * (rod_size * 1.5 + 2), y * (rod_size * 1.5 + 2), 0]) foot();
 //!for(side = [0, 1]) mirror([side, 0, 0]) translate([-rod_size * 2.5, 0, 0]) z_top_clamp();
+//!machine();
+//!test_unit();
 
+module test_unit() mirror([(motor == 0) ? 1 : 0, 0, 0]) difference() {
+	union() {
+		linear_extrude(height = 5, convexity = 5) difference() {
+				square([55,25], center = true);
+		}
+		//#translate([-16,0,0]) rotate(30,[0,0,1])  nut(m8_nut_diameter,20);
+	}
+
+	// Hex Hole
+	translate([-(z_rod_leadscrew_offset / 2)-1, 0, -20]) rotate(90) cylinder(r = rod_nut_size / 2, h = x_rod_spacing + 8 + rod_size * 20, $fn = 6);
+
+	// Bearing Hole
+	translate([16, 0, -1]) cylinder(r = bearing_size / 2 - .05, h = bearing_length*20, $fn = 30);
+
+	// Rod hole
+	translate([-1, 0, -3]) linear_extrude(height = (end_height - motor_casing / 4) * 2, convexity = 5) {
+		rotate(180 / 8) circle(rod_size * da8, $fn = 8);
+		translate([0, -rod_size / 4, 0]) square([rod_size * .6, rod_size / 2]);
+	}
+}
 
 //The following section positions parts for rendering the assembled machine.
-
+module machine() {
 	platform();
 	for(side = [0, 1]) mirror([side, 0, 0]) translate([-platform_screw_spacing[0] / 2 - y_bearing_offset - (rod_size + m3_size) / 2, 0, -bearing_size * sqrt(2) / 4 - bed_mount_height]) {
 		rotate([0, 180, 0]) {
@@ -111,7 +137,7 @@ da12 = 1 / cos(180 / 12) / 2;
 			}
 		}
 	}
-
+}
 
 
 
@@ -383,10 +409,13 @@ module x_end(motor = 0) mirror([(motor == 0) ? 1 : 0, 0, 0]) difference() {
 		}
 	}
 	translate([0, 0, (x_rod_spacing + rod_size + 8) / 2]) {
+		// Bearing Hole
 		for(end = [0, 1]) mirror([0, 0, end]) translate([z_rod_leadscrew_offset / 2, 0, -(x_rod_spacing + rod_size + 8) / 2 - 1]) cylinder(r = bearing_size / 2 - .05, h = bearing_length, $fn = 30);
+		// Smooth Bar Holes
 		for(side = [1, -1]) render(convexity = 5) translate([0, bearing_size / 2 + rod_size / 2 + 3, side * x_rod_spacing / 2]) rotate([0, 90, 0]) {
 			if(motor) %translate([0, 0, -(z_rod_leadscrew_offset + bearing_size + 10)  / 2 + rod_size / 2 + 2]) rotate(180 / 8) cylinder(r = rod_size * da8, h = x_rod_length, $fn = 8);
-			//cylinder(r = rod_size / 2, h = z_rod_leadscrew_offset + bearing_size + 10, center = true, $fn = 30);
+			// Hole for bars to stick out
+			if(motor == 0) cylinder(r = rod_size / 2, h = z_rod_leadscrew_offset + bearing_size + 10, center = true, $fn = 30);
 			difference() {
 				translate([0, 0, (motor > -1) ? rod_size / 2 + 2 : 0]) intersection() {
 					rotate(45) cube([rod_size + 2, rod_size + 2, z_rod_leadscrew_offset + bearing_size + 10], center = true);
