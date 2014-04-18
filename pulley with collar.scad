@@ -25,7 +25,7 @@ echo("thread width (3 shells):", tooth_width / 6);
 %cylinder(r = shaft_diameter / 2, h = 100, center = true, $fn = 180); 
 
 
-for(x = [-.5, .5]) for(y = [-.5, .5]) translate([21.5 * x, 21.5 * 0, 0]) pulley();
+//for(x = [-.5, .5]) for(y = [-.5, .5]) translate([21.5 * x, 21.5 * 0, 0]) pulley();
 
 module pulley() {
 	difference() {
